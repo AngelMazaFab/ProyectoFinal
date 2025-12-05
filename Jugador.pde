@@ -19,7 +19,9 @@ class Jugador {
   int tiempoAnimacionHacha;
   int tiempoUltimoHacha;
   int cooldownHacha;
-  
+
+  // Acuerdate que aquí se definen los cds y tiempos para las armas
+
   Jugador(float posX, float posY) {
     x = posX;
     y = posY;
@@ -33,9 +35,9 @@ class Jugador {
     ultimoParry = -3000;
     
     armaActual = ARMA_NINGUNA;
-    balas = 6;
+    balas = 10;
     tiempoUltimaRecarga = millis();
-    tiempoParaRecarga = 10000;
+    tiempoParaRecarga = 2000;
     tiempoDisparoVisual = 0;
     
     tiempoAnimacionHacha = 0;
@@ -179,7 +181,7 @@ class Jugador {
       }
     }
   }
-  
+  //La neta no supe como hacer que el parry sirva, hazlo tú XD
   void activarParry() {
     if (millis() - ultimoParry > cooldownParry) {
       parryActivo = true;
@@ -197,6 +199,8 @@ class Jugador {
     return parryActivo;
   }
   
+  //ya quedo el parry, ahi le metes cd y todo eso
+
   void seleccionarArma(int arma) {
     armaActual = arma;
   }

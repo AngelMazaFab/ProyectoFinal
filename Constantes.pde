@@ -1,5 +1,3 @@
-// CONSTANTES DEL JUEGO
-
 final int ESTADO_JUGANDO = 0;
 final int ESTADO_SELECCION = 1;
 final int ESTADO_GAMEOVER = 2;

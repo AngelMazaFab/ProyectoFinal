@@ -11,7 +11,9 @@ class Estrella {
     tamano = int(random(1, 4));
     brillo = int(random(150, 255));
   }
-  
+
+  //Maldigo el momento en el que decidi meter estrellas a esta cosa
+
   void actualizar() {
     x -= velocidad;
     if (x < 0) {
@@ -19,7 +21,7 @@ class Estrella {
       y = random(height);
     }
   }
-  
+
   void dibujar() {
     if (frameCount % 30 < 15) fill(brillo, brillo, brillo);
     else fill(brillo - 50, brillo - 50, brillo - 50);

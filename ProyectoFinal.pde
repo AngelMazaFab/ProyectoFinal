@@ -1,5 +1,7 @@
-// PROYECTO: Juego de Evasión 8-BITS | AUTORES: Angel y Pablo
+// PROYECTO FINAL: Desierto al cuadrado
+//AUTORES: Angel Maza Fabila y Jesús Pablo Damián Nava
 
+//Aquí nomás va el main
 GestorJuego gestor;
 Jugador jugador;
 InterfazHUD hud;
