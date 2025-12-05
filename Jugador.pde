@@ -1,7 +1,6 @@
 class Jugador {
   float x, y;
   float velocidad;
-  int radio;
   boolean moverArriba, moverAbajo;
 
   boolean parryActivo;
@@ -20,13 +19,10 @@ class Jugador {
   int tiempoUltimoHacha;
   int cooldownHacha;
 
-  // Acuerdate que aquí se definen los cds y tiempos para las armas
-
   Jugador(float posX, float posY) {
     x = posX;
     y = posY;
     velocidad = 5;
-    radio = 50;
     
     parryActivo = false;
     tiempoInicioParry = 0;
@@ -48,7 +44,7 @@ class Jugador {
   void actualizar() {
     if (moverArriba) y -= velocidad;
     if (moverAbajo) y += velocidad;
-    y = constrain(y, radio/2, height - radio/2);
+    y = constrain(y, imgJugador.height/2, height - imgJugador.height/2);
     
     if (parryActivo && millis() - tiempoInicioParry > duracionParry) {
       parryActivo = false;
@@ -58,8 +54,6 @@ class Jugador {
       balas++;
       tiempoUltimaRecarga = millis();
     }
-    
-    dibujarEfectosAtaque();
   }
   
   void dibujar() {
@@ -68,8 +62,11 @@ class Jugador {
     
     dibujarCuerda();
     dibujarParry();
-    dibujarCuerpo();
-    dibujarSombrero();
+    
+    imageMode(CENTER);
+    image(imgJugador, 0, 0); 
+    
+    dibujarEfectosAtaque();
     
     popMatrix();
   }
@@ -88,61 +85,54 @@ class Jugador {
       noFill();
       stroke(COLOR_PARRY);
       strokeWeight(4);
+      
+      float diametro = max(imgJugador.width, imgJugador.height) * 0.8;
+      
       for (int i = 0; i < 3; i++) {
-        ellipse(0, 0, radio + 10 + (i * 8), radio + 10 + (i * 8));
+        ellipse(0, 0, diametro + (i * 8), diametro + (i * 8));
       }
       strokeWeight(1);
     }
   }
   
-  void dibujarCuerpo() {
-    fill(COLOR_JUGADOR);
-    stroke(255);
-    strokeWeight(2);
-    
-    rectMode(CENTER);
-    rect(0, 0, radio * 0.7, radio * 0.7);
-    
-    fill(0);
-    noStroke();
-    rect(-8, -5, 6, 6);
-    rect(8, -5, 6, 6);
-  }
-  
-  void dibujarSombrero() {
-    fill(200, 150, 100);
-    stroke(150, 100, 50);
-    strokeWeight(2);
-    
-    rect(0, -radio/2 - 8, radio * 0.9, 8);
-    rect(0, -radio/2 - 18, radio * 0.5, 12);
-    
-    strokeWeight(1);
-    rectMode(CORNER);
-  }
-  
   void dibujarEfectosAtaque() {
+    
+    // 1. PISTOLA
     if (millis() - tiempoDisparoVisual < 100) {
+      pushMatrix();
+      translate(imgJugador.width/4 + 10, 0); 
+      
       stroke(255, 255, 0);
-      strokeWeight(6);
-      line(x, y, width, y);
+      strokeWeight(4);
+      
+      float inicioRayoX = imgRevolver.width/2; 
+      line(inicioRayoX, -5, width - x, -5); 
       
       stroke(255, 200, 0);
-      strokeWeight(10);
-      point(x + 20, y);
-      point(x + 40, y);
+      strokeWeight(8);
+      point(inicioRayoX, -5); 
       strokeWeight(1);
+      
+      imageMode(CENTER);
+      image(imgRevolver, 0, 0); 
+      
+      popMatrix();
     }
     
-    if (millis() - tiempoAnimacionHacha < 200) {
-      stroke(200, 200, 255);
-      strokeWeight(15);
-      line(x + 50, 0, x + 50, height);
+    // 2. HACHA
+    float duracion = 200;
+    float tiempo = millis() - tiempoAnimacionHacha;
+    
+    if (tiempo < duracion) {
+      pushMatrix();
+      translate(imgJugador.width/2 + 20, 0); 
       
-      stroke(255, 255, 255, 150);
-      strokeWeight(8);
-      line(x + 50, 0, x + 50, height);
-      strokeWeight(1);
+      float yPos = map(tiempo, 0, duracion, -200, 200);
+      
+      imageMode(CENTER);
+      image(imgHacha, 0, yPos); 
+      
+      popMatrix();
     }
   }
   
@@ -161,7 +151,9 @@ class Jugador {
       sonidoDisparo.play();
       
       for (Enemigo e : enemigos) {
-        if (abs((e.y + e.tamanio/2) - y) < 30) {
+        float margenY = ((imgRevolver.height/2) + (imgsEnemigos[0].height/2)) * 0.4;
+        
+        if (abs(e.y - y) < margenY && e.x > x) {
           e.resetPos();
           gestor.incrementarPuntaje(4);
           e.fueEliminado = true;
@@ -182,7 +174,10 @@ class Jugador {
       sonidoHacha.play();
       
       for (Enemigo e : enemigos) {
-        if (abs(e.x - (x + 50)) < 50) {
+        float alcanceX = (imgJugador.width + imgHacha.width/2) * 0.6;
+        float alcanceY = (imgHacha.height/2 + imgsEnemigos[0].height/2) * 0.7;
+
+        if (e.x > x && e.x - x < alcanceX && abs(e.y - y) < alcanceY) {
           e.resetPos();
           e.fueEliminado = true;
           gestor.incrementarPuntaje(4);
@@ -195,7 +190,7 @@ class Jugador {
       }
     }
   }
-  //La neta no supe como hacer que el parry sirva, hazlo tú XD
+
   void activarParry() {
     if (millis() - ultimoParry > cooldownParry) {
       parryActivo = true;
@@ -206,16 +201,20 @@ class Jugador {
   }
   
   boolean colisionaCon(Enemigo e) {
-    float distancia = dist(x, y, e.x + e.tamanio/2, e.y + e.tamanio/2);
-    return distancia < (radio/2 + e.tamanio/2);
+    // --- REDUCCIÓN DE HITBOX ---
+    // Ajustado de 0.55 a 0.45 (Reducción del 10%)
+    
+    float radioJugador = (imgJugador.width / 2.0) * 0.45;
+    float radioEnemigo = (imgsEnemigos[e.tipoImagen].width / 2.0) * 0.45;
+    
+    float distancia = dist(x, y, e.x, e.y);
+    return distancia < (radioJugador + radioEnemigo);
   }
   
   boolean tieneParryActivo() {
     return parryActivo;
   }
   
-  //ya quedo el parry, ahi le metes cd y todo eso
-
   void seleccionarArma(int arma) {
     armaActual = arma;
   }

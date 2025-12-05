@@ -1,4 +1,4 @@
-// PROYECTO FINAL: Desierto al cuadrado
+// PROYECTO FINAL: Círculo Mágico Espacial 2 (mejor que el primero, peor que el tercero)
 //AUTORES: Angel Maza Fabila y Jesús Pablo Damián Nava
 
 import processing.sound.*;
@@ -18,9 +18,38 @@ SoundFile musicaFondo1;
 SoundFile musicaFondo2;
 SoundFile morir;
 
+PImage imgJugador;
+PImage imgRevolver;
+PImage imgHacha;
+PImage[] imgsEnemigos = new PImage[3]; 
+
 void setup() {
   size(600,600);
   frameRate(60);
+
+  COLOR_FONDO = color(10, 10, 30);
+  COLOR_JUGADOR = color(0, 255, 200);
+  COLOR_ENEMIGO = color(255, 50, 100);
+  COLOR_HUD = color(100, 200, 255);
+  COLOR_PARRY = color(0, 255, 100);
+  
+  imgJugador = loadImage("Texturas/Hero_01.png");
+  imgJugador.resize(0, 100); 
+
+  imgRevolver = loadImage("Texturas/Revolver_01.png");
+  imgRevolver.resize(0, 50);
+
+  imgHacha = loadImage("Texturas/Axe_01.png");
+  imgHacha.resize(0, 300);
+  
+  imgsEnemigos[0] = loadImage("Texturas/1d4_01.png");
+  imgsEnemigos[1] = loadImage("Texturas/1d6_01.png");
+  imgsEnemigos[2] = loadImage("Texturas/1d8_01.png");
+  
+  for(int i = 0; i < 3; i++){
+    imgsEnemigos[i].resize(0, 100);
+  }
+
   musicaFondo1 = new SoundFile(this, "musicaFondo1.mp3");
   musicaFondo2 = new SoundFile(this, "musicaFondo2.mp3");
   sonidoDisparo = new SoundFile(this, "sonidoPistola.mp3");

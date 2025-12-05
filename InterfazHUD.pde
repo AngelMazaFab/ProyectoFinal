@@ -44,7 +44,7 @@ class InterfazHUD {
     
     fill(COLOR_HUD);
     textSize(16);
-    text("Parreate", 150, 67);
+    text("Parreate (espacio)", 150, 67);
   }
   
   void dibujarArma(Jugador j) {
@@ -59,7 +59,7 @@ class InterfazHUD {
     fill(COLOR_HUD);
     textSize(20);
     textAlign(RIGHT);
-    text("Munitzione: " + j.balas, width - 20, 35);
+    text("(>) Munitzione: " + j.balas, width - 20, 35);
     
     float tiempoRecarga = millis() - j.tiempoUltimaRecarga;
     float anchoRecarga = map(tiempoRecarga, 0, j.tiempoParaRecarga, 0, 100);
@@ -82,7 +82,7 @@ class InterfazHUD {
     textSize(20);
     textAlign(RIGHT);
     
-    if (cdRestanteHacha <= 0) text("¡Hacheate!", width - 20, 35);
+    if (cdRestanteHacha <= 0) text("(>) ¡Hacheate!", width - 20, 35);
     else text("Hachiesperate", width - 20, 35);
     
     float tiempoCooldown = millis() - j.tiempoUltimoHacha;
