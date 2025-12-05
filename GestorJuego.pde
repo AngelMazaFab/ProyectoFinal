@@ -7,7 +7,7 @@ class GestorJuego {
   GestorJuego() {
     estadoActual = ESTADO_SELECCION;
     puntaje = 0;
-    velocidadGlobal = 3.0;
+    velocidadGlobal = 4.0;
     seleccionDeArmaRealizada = false;
   }
   
@@ -34,15 +34,20 @@ class GestorJuego {
         if (jugador.tieneParryActivo()) {
           e.resetPos();
           puntaje += 5;
+          enemigoMuerto[indiceSonidoEM].play();
+          indiceSonidoEM++;
+          if (indiceSonidoEM >= enemigoMuerto.length) {
+            indiceSonidoEM = 0;
+          }
         } else {
           estadoActual = ESTADO_GAMEOVER;
+          morir.play();
         }
       }
     }
     
     hud.dibujar(puntaje, velocidadGlobal, jugador);
   }
-  
   void gestionarDificultad() {
     int nivelVelocidad = puntaje / 10;
     velocidadGlobal = 3.0 + (nivelVelocidad * 0.5);
@@ -65,11 +70,11 @@ class GestorJuego {
     textAlign(CENTER);
     fill(COLOR_HUD);
     textSize(36);
-    text("START GAME!", width/2, 120);
+    text("¡Empiezale pues!", width/2, 120);
     
     fill(255, 255, 100);
     textSize(24);
-    text("SELECT WEAPON", width/2, 180);
+    text("Escoja su rifle master (O hacha, lol)", width/2, 180);
     
     stroke(COLOR_HUD);
     strokeWeight(3);
@@ -78,9 +83,9 @@ class GestorJuego {
     
     fill(COLOR_HUD);
     textSize(28);
-    text("^ REVOLVER", width/2, 265);
+    text("^ Pistolón", width/2, 265);
     textSize(18);
-    text("(6 shots)", width/2, 295);
+    text("(11 de plomo, 2 de cd )", width/2, 295);
     
     stroke(255, 100, 100);
     strokeWeight(3);
@@ -89,9 +94,9 @@ class GestorJuego {
     
     fill(255, 100, 100);
     textSize(28);
-    text("v AXE", width/2, 395);
+    text("v Hacha", width/2, 395);
     textSize(18);
-    text("(melee sweep + 2s CD)", width/2, 425);
+    text("(Golpea cada 2 segundos)", width/2, 425);
     
     strokeWeight(1);
   }
@@ -105,15 +110,15 @@ class GestorJuego {
     
     textAlign(CENTER);
     textSize(60);
-    text("GAME OVER", width/2, height/2 - 40);
+    text("Tssss...", width/2, height/2 - 40);
     
     fill(COLOR_HUD);
     textSize(30);
-    text("SCORE: " + puntaje, width/2, height/2 + 20);
+    text("Puntillos: " + puntaje, width/2, height/2 + 20);
     
     fill(255, 255, 100);
     textSize(22);
-    text("Press [R] to Restart", width/2, height/2 + 80);
+    text("Pícale r para reiniciar", width/2, height/2 + 80);
   }
   
   void manejarTeclaPresionada(int codigo, char tecla) {
@@ -155,7 +160,7 @@ class GestorJuego {
   void reiniciar() {
     estadoActual = ESTADO_SELECCION;
     puntaje = 0;
-    velocidadGlobal = 3.0;
+    velocidadGlobal = 4.0;
     enemigos.clear();
     enemigos.add(new Enemigo());
     jugador.reiniciar();
@@ -165,4 +170,14 @@ class GestorJuego {
   void incrementarPuntaje(int cantidad) {
     puntaje += cantidad;
   }
+  void gestionarMusica() {
+  if (!musicaFondo1.isPlaying() && !musicaFondo2.isPlaying()) {
+    
+    if (random(1.0) > 0.5) {
+      musicaFondo1.play();
+    } else {
+      musicaFondo2.play();
+    }
+  }
+}
 }

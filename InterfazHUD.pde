@@ -23,7 +23,7 @@ class InterfazHUD {
     fill(COLOR_HUD);
     textSize(24);
     textAlign(LEFT);
-    text("SCORE: " + puntaje, 20, 35);
+    text("Puntos: " + puntaje, 20, 35);
   }
   
   void dibujarParry(Jugador j) {
@@ -44,7 +44,7 @@ class InterfazHUD {
     
     fill(COLOR_HUD);
     textSize(16);
-    text("PARRY", 150, 67);
+    text("Parreate", 150, 67);
   }
   
   void dibujarArma(Jugador j) {
@@ -59,7 +59,7 @@ class InterfazHUD {
     fill(COLOR_HUD);
     textSize(20);
     textAlign(RIGHT);
-    text("AMMO: " + j.balas, width - 20, 35);
+    text("Munitzione: " + j.balas, width - 20, 35);
     
     float tiempoRecarga = millis() - j.tiempoUltimaRecarga;
     float anchoRecarga = map(tiempoRecarga, 0, j.tiempoParaRecarga, 0, 100);
@@ -82,8 +82,8 @@ class InterfazHUD {
     textSize(20);
     textAlign(RIGHT);
     
-    if (cdRestanteHacha <= 0) text("AXE READY", width - 20, 35);
-    else text("AXE CD", width - 20, 35);
+    if (cdRestanteHacha <= 0) text("¡Hacheate!", width - 20, 35);
+    else text("Hachiesperate", width - 20, 35);
     
     float tiempoCooldown = millis() - j.tiempoUltimoHacha;
     float anchoCooldown = map(tiempoCooldown, 0, j.cooldownHacha, 0, 100);
@@ -103,6 +103,6 @@ class InterfazHUD {
     fill(200, 200, 255);
     textSize(14);
     textAlign(LEFT);
-    text("SPD: " + nf(velocidad, 1, 1), 20, 105);
+    text("Velocida': " + nf(velocidad, 1, 1), 20, 105);
   }
 }

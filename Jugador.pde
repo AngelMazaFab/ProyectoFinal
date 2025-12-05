@@ -3,7 +3,7 @@ class Jugador {
   float velocidad;
   int radio;
   boolean moverArriba, moverAbajo;
-  
+
   boolean parryActivo;
   int tiempoInicioParry;
   int duracionParry;
@@ -35,7 +35,7 @@ class Jugador {
     ultimoParry = -3000;
     
     armaActual = ARMA_NINGUNA;
-    balas = 10;
+    balas = 11;
     tiempoUltimaRecarga = millis();
     tiempoParaRecarga = 2000;
     tiempoDisparoVisual = 0;
@@ -158,11 +158,18 @@ class Jugador {
     if (balas > 0) {
       balas--;
       tiempoDisparoVisual = millis();
+      sonidoDisparo.play();
       
       for (Enemigo e : enemigos) {
         if (abs((e.y + e.tamanio/2) - y) < 30) {
           e.resetPos();
+          gestor.incrementarPuntaje(4);
           e.fueEliminado = true;
+          enemigoMuerto[indiceSonidoEM].play();
+          indiceSonidoEM++;
+          if (indiceSonidoEM >= enemigoMuerto.length) {
+            indiceSonidoEM = 0;
+          }
         }
       }
     }
@@ -172,11 +179,18 @@ class Jugador {
     if (millis() - tiempoUltimoHacha > cooldownHacha) {
       tiempoAnimacionHacha = millis();
       tiempoUltimoHacha = millis();
+      sonidoHacha.play();
       
       for (Enemigo e : enemigos) {
         if (abs(e.x - (x + 50)) < 50) {
           e.resetPos();
           e.fueEliminado = true;
+          gestor.incrementarPuntaje(4);
+          enemigoMuerto[indiceSonidoEM].play();
+          indiceSonidoEM++;
+          if (indiceSonidoEM >= enemigoMuerto.length) {
+            indiceSonidoEM = 0;
+          }
         }
       }
     }
@@ -187,6 +201,7 @@ class Jugador {
       parryActivo = true;
       tiempoInicioParry = millis();
       ultimoParry = millis();
+      sonidoParry.play();
     }
   }
   

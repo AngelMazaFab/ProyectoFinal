@@ -1,15 +1,35 @@
 // PROYECTO FINAL: Desierto al cuadrado
 //AUTORES: Angel Maza Fabila y Jesús Pablo Damián Nava
 
-//Aquí nomás va el main
+import processing.sound.*;
+
 GestorJuego gestor;
 Jugador jugador;
 InterfazHUD hud;
 ArrayList<Enemigo> enemigos;
 ArrayList<Estrella> estrellas;
 
+SoundFile sonidoDisparo;
+SoundFile sonidoParry;
+SoundFile sonidoHacha;
+SoundFile [] enemigoMuerto = new SoundFile[3];
+int indiceSonidoEM = 0;
+SoundFile musicaFondo1;
+SoundFile musicaFondo2;
+SoundFile morir;
+
 void setup() {
-  size(600, 600);
+  size(600,600);
+  frameRate(60);
+  musicaFondo1 = new SoundFile(this, "musicaFondo1.mp3");
+  musicaFondo2 = new SoundFile(this, "musicaFondo2.mp3");
+  sonidoDisparo = new SoundFile(this, "sonidoPistola.mp3");
+  enemigoMuerto [0] = new SoundFile(this, "enemigoMuere1.mp3");
+  enemigoMuerto [1] = new SoundFile(this, "enemigoMuere2.mp3");
+  enemigoMuerto [2] = new SoundFile(this, "enemigoMuere3.mp3");
+  morir = new SoundFile(this, "muelto.mp3");
+  sonidoHacha = new SoundFile(this, "sonidoHacha.mp3");
+  sonidoParry = new SoundFile(this, "sonidoParry.mp3");
   
   gestor = new GestorJuego();
   jugador = new Jugador(100, height/2);
@@ -31,7 +51,7 @@ void draw() {
     e.actualizar();
     e.dibujar();
   }
-  
+  gestor.gestionarMusica();
   gestor.actualizar();
 }
 
